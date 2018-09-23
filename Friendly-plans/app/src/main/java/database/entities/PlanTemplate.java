@@ -31,6 +31,15 @@ public class PlanTemplate {
     )
     private List<TaskTemplate> tasksWithThisPlan;
 
+    @ToMany
+    @JoinEntity(
+            entity = JoinPlansWithPrizes.class,
+            sourceProperty = "planTemplateId",
+            targetProperty = "prizeId"
+
+    )
+    private List<Prize> prizesWithThisPlan;
+
     /**
      * Used to resolve relations
      */
@@ -195,6 +204,34 @@ public class PlanTemplate {
     @Generated(hash = 832786472)
     public synchronized void resetTasksWithThisPlan() {
         tasksWithThisPlan = null;
+    }
+
+    /**
+     * To-many relationship, resolved on first access (and after reset).
+     * Changes to to-many relations are not persisted, make changes to the target entity.
+     */
+    @Generated(hash = 1724469631)
+    public List<Prize> getPrizesWithThisPlan() {
+        if (prizesWithThisPlan == null) {
+            final DaoSession daoSession = this.daoSession;
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            PrizeDao targetDao = daoSession.getPrizeDao();
+            List<Prize> prizesWithThisPlanNew = targetDao._queryPlanTemplate_PrizesWithThisPlan(id);
+            synchronized (this) {
+                if (prizesWithThisPlan == null) {
+                    prizesWithThisPlan = prizesWithThisPlanNew;
+                }
+            }
+        }
+        return prizesWithThisPlan;
+    }
+
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    @Generated(hash = 389629723)
+    public synchronized void resetPrizesWithThisPlan() {
+        prizesWithThisPlan = null;
     }
 
     /** called by internal mechanisms, do not call yourself. */
